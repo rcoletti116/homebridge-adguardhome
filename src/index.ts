@@ -180,24 +180,28 @@ class AdGuardHome implements AccessoryPlugin {
       this.targetState = false;
 
       this.accessoryService = new hap.Service.Switch(this.name);
-      this.accessoryService
-        .getCharacteristic(hap.Characteristic.On)
-        .on(
-          CharacteristicEventTypes.GET,
-          (callback: CharacteristicGetCallback) => {
-            callback(null, this.targetState);
-          }
-        )
-        .on(
-          CharacteristicEventTypes.SET,
-          (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
-            this.gotInstance
-              .post("protection", {
-                json: {
-                  enabled: !!value,
-                  duration: this.duration
-                },
-              })
+this.accessoryService = new hap.Service.Switch(this.name);
+            this.accessoryService
+                .getCharacteristic(hap.Characteristic.On)
+                .on("get" /* CharacteristicEventTypes.GET */, (callback) => {
+                callback(null, this.targetState);
+            })
+                .on("set" /* CharacteristicEventTypes.SET */, (value, callback) => {
+                if (this.targetState=false)(
+                this.gotInstance
+                    .post("protection", {
+                    json: {
+                        enabled: !!value,
+                    },
+                }))
+                else(
+                this.gotInstance
+                    .post("protection", {
+                    json: {
+                        enabled: !!value,
+                        duration: this.duration
+                    },
+}))
               .then((res) => {
                 const enabled = res.statusCode === 200;
                 this.log.info(`Set to: ${enabled ? "🟡 ON" : "⚪️ OFF"}`);
