@@ -58,6 +58,7 @@ class AdGuardHome implements AccessoryPlugin {
     this.https = !!config["https"];
     this.interval = config["interval"] || 5000;
     this.type = config["type"] || "SWITCH";
+    this.duration = config["duration"] || "null";
     this.debug = config["debug"] || false;
 
     const Authorization = `Basic ${Buffer.from(
@@ -191,9 +192,10 @@ class AdGuardHome implements AccessoryPlugin {
           CharacteristicEventTypes.SET,
           (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
             this.gotInstance
-              .post("dns_config", {
+              .post("protection", {
                 json: {
-                  protection_enabled: !!value,
+                  enabled: !!value,
+                  duration: this.duration
                 },
               })
               .then((res) => {
